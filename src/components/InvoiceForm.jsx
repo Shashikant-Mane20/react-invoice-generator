@@ -98,20 +98,21 @@ const InvoiceGenerator = () => {
             </div>
           </div>
         </div>
-        
-   <table className="w-full table-auto border-collapse mb-6">
-          <thead className="bg-gray-200">
+
+        {/* Items Table */}
+        <table className="w-full table-auto border-collapse mb-6">
+          <thead>
             <tr>
-              <th className="border-b py-3 px-4 text-left">Service</th>
-              <th className="border-b py-3 px-4 text-left">Description</th>
-              <th className="border-b py-3 px-4 text-left">Quantity</th>
-              <th className="border-b py-3 px-4 text-left">Price</th>
-              <th className="border-b py-3 px-4 text-left">Total</th>
+              <th className="border-b py-3 px-4">Service</th>
+              <th className="border-b py-3 px-4">Description</th>
+              <th className="border-b py-3 px-4">Quantity</th>
+              <th className="border-b py-3 px-4">Price</th>
+              <th className="border-b py-3 px-4">Total</th>
             </tr>
           </thead>
           <tbody>
             {items.map((item, index) => (
-              <tr key={index} className="hover:bg-gray-100">
+              <tr key={index}>
                 <td className="border-b py-3 px-4">
                   <input
                     type="text"
@@ -183,7 +184,7 @@ const InvoiceGenerator = () => {
           }
           fileName="invoice.pdf"
         >
-          <button className="bg-green-500 text-white px-4 py-2 rounded">Download Invoice</button>
+          <button className="bg-green-500 text-white px-4 py-2 rounded">Download PDF</button>
         </PDFDownloadLink>
       </div>
     </div>
@@ -209,52 +210,48 @@ const PDFInvoice = ({ logo, invoiceNumber, invoiceDate, dueDate, billTo, address
     <Document>
       <Page style={styles.page}>
         {logo && <Image src={logo} style={styles.logo} />}
-        <Text style={styles.header}>Invoice #{invoiceNumber}</Text>
-        <Text style={styles.text}>
-          <Text style={styles.bold}>Invoice Date:</Text> {invoiceDate}
-        </Text>
-        <Text style={styles.text}>
-          <Text style={styles.bold}>Due Date:</Text> {dueDate}
-        </Text>
-        <Text style={styles.text}>
-          <Text style={styles.bold}>Bill To:</Text> {billTo}
-        </Text>
-        <Text style={styles.text}>
-          <Text style={styles.bold}>Address:</Text> {address}
-        </Text>
-
-        {/* Invoice Table */}
-        <View style={styles.table}>
-          <View style={styles.itemRow}>
-            <Text style={styles.tableHeader}>Service</Text>
-            <Text style={styles.tableHeader}>Description</Text>
-            <Text style={styles.tableHeader}>Quantity</Text>
-            <Text style={styles.tableHeader}>Price</Text>
-            <Text style={styles.tableHeader}>Total</Text>
-          </View>
-          {items.map((item, index) => (
-            <View key={index} style={styles.itemRow}>
-              <Text style={styles.tableCell}>{item.service}</Text>
-              <Text style={styles.tableCell}>{item.description}</Text>
-              <Text style={styles.tableCell}>{item.quantity}</Text>
-              <Text style={styles.tableCell}>${item.price.toFixed(2)}</Text>
-              <Text style={styles.tableCell}>${(item.quantity * item.price).toFixed(2)}</Text>
-            </View>
-          ))}
+        <Text style={styles.header}>Invoice</Text>
+        <View style={styles.section}>
+          <Text style={styles.text}>Invoice Number: <Text style={styles.bold}>{invoiceNumber}</Text></Text>
+          <Text style={styles.text}>Invoice Date: <Text style={styles.bold}>{invoiceDate}</Text></Text>
+          <Text style={styles.text}>Due Date: <Text style={styles.bold}>{dueDate}</Text></Text>
         </View>
-
-        <Text style={styles.text}>
-          <Text style={styles.bold}>Subtotal:</Text> ${subtotal.toFixed(2)}
-        </Text>
-        <Text style={styles.text}>
-          <Text style={styles.bold}>Tax (10%):</Text> ${tax.toFixed(2)}
-        </Text>
-        <Text style={[styles.text, styles.bold]}>Total: ${total.toFixed(2)}</Text>
+        <View style={styles.section}>
+          <Text style={styles.text}>Bill To: <Text style={styles.bold}>{billTo}</Text></Text>
+          <Text style={styles.text}>Address: <Text style={styles.bold}>{address}</Text></Text>
+        </View>
+        <View style={styles.section}>
+          <Text style={styles.bold}>Items:</Text>
+          <View style={styles.table}>
+            <View style={styles.itemRow}>
+              <Text style={[styles.tableHeader, { width: "40%" }]}>Service</Text>
+              <Text style={[styles.tableHeader, { width: "30%" }]}>Description</Text>
+              <Text style={[styles.tableHeader, { width: "10%" }]}>Quantity</Text>
+              <Text style={[styles.tableHeader, { width: "10%" }]}>Price</Text>
+              <Text style={[styles.tableHeader, { width: "10%" }]}>Total</Text>
+            </View>
+            {items.map((item, index) => (
+              <View key={index} style={styles.itemRow}>
+                <Text style={[styles.tableCell, { width: "40%" }]}>{item.service}</Text>
+                <Text style={[styles.tableCell, { width: "30%" }]}>{item.description}</Text>
+                <Text style={[styles.tableCell, { width: "10%" }]}>{item.quantity}</Text>
+                <Text style={[styles.tableCell, { width: "10%" }]}>{item.price}</Text>
+                <Text style={[styles.tableCell, { width: "10%" }]}>{(item.quantity * item.price).toFixed(2)}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+        <View style={styles.section}>
+          <Text style={styles.text}>Subtotal: <Text style={styles.bold}>${subtotal.toFixed(2)}</Text></Text>
+          <Text style={styles.text}>Tax (10%): <Text style={styles.bold}>${tax.toFixed(2)}</Text></Text>
+          <Text style={[styles.text, styles.bold]}>Total: ${total.toFixed(2)}</Text>
+        </View>
       </Page>
     </Document>
   );
 };
 
 export default InvoiceGenerator;
+
 
 
